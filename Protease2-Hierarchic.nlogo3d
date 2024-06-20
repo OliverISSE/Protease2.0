@@ -10,6 +10,7 @@ globals [
   layers-radius
   layers-neighbourhood
   layers-swarm-algortihm
+  layers-move-weight
 ]
 
 
@@ -19,6 +20,7 @@ swarm-agents-own [
   swarm-radius
   swarm-algortihm
   swarm-neighbourhood
+  swarm-move-weight
   mp-index;
   orientation
 ]
@@ -36,6 +38,15 @@ to startup
 end
 
 to setup
+  if layer-midpoints-count = 0 [
+    if-else user-yes-or-no? (word "You need to first set up the layers. Du you want to use the default Ring-of-Rings setup ?")[
+    scenario-1
+    ] [
+      stop
+    ]
+  ]
+
+
   clear
   setup-agents
   if count swarm-agents = 0 [stop]
@@ -174,6 +185,7 @@ to setup-swarm-parameters
       set swarm-radius item (i + 1) layers-radius
       set swarm-algortihm item (i + 1) layers-swarm-algortihm
       set swarm-neighbourhood item (i + 1) layers-neighbourhood
+      set swarm-move-weight item (i + 1) layers-move-weight
     ]
     set i i + 1
   ]
@@ -230,14 +242,17 @@ to go
     let neighbourhood 0
     let r 0
     let sa ""
+    let mw 0
     if-else (layer = 0) [
       set neighbourhood item 0 layers-neighbourhood
       set r item 0 layers-radius
       set sa item 0 layers-swarm-algortihm
+      set mw item 0 layers-move-weight
     ] [
       set neighbourhood [swarm-neighbourhood] of mid-agent
       set r [swarm-radius] of mid-agent
       set sa [swarm-algortihm] of mid-agent
+      set mw [swarm-move-weight] of mid-agent
 
     ]
 
@@ -245,10 +260,13 @@ to go
     let vector [0 0 0]
     (ifelse
       sa = "Ring-of-Fliers" [
-        set vector calc-ring-of-fliers mid-agent closest r
+        set vector calc-ring-of-fliers mid-agent closest r mw
       ]
       sa = "Ball-of-Fliers" [
         set vector calc-ball-of-fliers mid-agent closest r
+      ]
+      sa = "Line-of-Fliers" [
+        set vector calc-line-of-fliers mid-agent closest r
       ]
     )
 
@@ -306,7 +324,7 @@ end
 
 
 
-to-report calc-ring-of-fliers [mid-agent closest r]
+to-report calc-ring-of-fliers [mid-agent closest r mw]
   let mid agent-to-vector mid-agent
   ;center urge
   let center-urge sub mid (agent-to-vector self)
@@ -326,10 +344,19 @@ to-report calc-ring-of-fliers [mid-agent closest r]
   let flat-urge-weight ((scalar-prod (sub (agent-to-vector self) mid) flat-urge) / (magnitude flat-urge)) * (-1)
   set flat-urge scale (flat-urge-weight) flat-urge
 
+  ;move urge
+  let direction [orientation] of mid-agent
+  let agent agent-to-vector self
+  let projection line-projection agent mid direction
+  let line-urge sub projection agent
+  let move-urge cross-prod orientation line-urge
+  set move-urge scale mw move-urge
+
 
   ;add urges
   let vector [0 0 0]
   set vector add vector center-urge
+  set vector add vector move-urge
   set vector add vector separation-urge
   set vector add vector flat-urge
 
@@ -361,6 +388,48 @@ to-report calc-ball-of-fliers [mid-agent closest r]
   report vector
 
 end
+
+to-report calc-line-of-fliers [mid-agent closest r]
+  ;Projection onto line
+  let mid agent-to-vector mid-agent
+  let direction [orientation] of mid-agent
+  let agent agent-to-vector self
+  let projection line-projection agent mid direction
+  let line-urge sub projection agent
+  set line-urge scale 27 line-urge
+
+
+  ;center urge
+  let center-urge sub mid agent
+  let weight magnitude sub agent mid - r
+  let center-urge-weight ifelse-value (weight > 0) [weight][0]
+  set center-urge scale center-urge-weight center-urge
+
+
+  ;seperation urge
+  let separation-urge [0 0 0]
+  let seperation-urge-weight 0
+  if (closest != nobody) [
+    set separation-urge sub (agent-to-vector self) (agent-to-vector closest)
+    set seperation-urge-weight ((1 / magnitude separation-urge) ^ 2)
+  ]
+  set separation-urge scale seperation-urge-weight separation-urge
+
+  ;add urges
+  let vector [0 0 0]
+  set vector add vector line-urge
+  set vector add vector separation-urge
+  set vector add vector center-urge
+
+  report vector
+end
+
+to-report line-projection [point origin direction]
+  let a scalar-prod sub point origin direction
+  let b scalar-prod direction direction
+  report add scale (a / b) direction origin
+end
+
 
 
 
@@ -446,9 +515,15 @@ to select-layer
     set layers-swarm-algortihm ["Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
   ]
 
+  if layers-move-weight = 0 [
+    set layers-move-weight [0 0 0 0 0]
+  ]
+
   set agents-per-midpoint (item selected-layer layer-midpoints-count)
 
   set radius (item selected-layer layers-radius)
+
+  set move-weight (item selected-layer layers-move-weight)
 
   set neighbourhood-radius (item selected-layer layers-neighbourhood)
 
@@ -463,8 +538,67 @@ to confirm-layer
  set layers-radius replace-item selected-layer layers-radius radius
  set layers-neighbourhood replace-item selected-layer layers-neighbourhood neighbourhood-radius
  set layers-swarm-algortihm replace-item selected-layer layers-swarm-algortihm swarm-algorithm
+ set layers-move-weight replace-item selected-layer layers-move-weight move-weight
 
 end
+
+
+
+to scenario-1
+  ;Ring-of-Rings
+  set layer-midpoints-count [8 8 0 0 0]
+  set layers-radius [20 10 0 0 0]
+  set layers-neighbourhood [20 5 0 0 0]
+  set layers-swarm-algortihm ["Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0 0.020 0 0 0]
+  set layer-count 2
+  setup
+end
+
+to scenario-2
+  ;Ring-of-Lines
+  set layer-midpoints-count [8 8 0 0 0]
+  set layers-radius [20 10 0 0 0]
+  set layers-neighbourhood [20 5 0 0 0]
+  set layers-swarm-algortihm ["Ring-of-Fliers" "Line-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0.004 0 0 0 0]
+  set layer-count 2
+  setup
+end
+
+to scenario-3
+  ;Ring-of-Line-of-Rings
+  set layer-midpoints-count [8 8 6 0 0]
+  set layers-radius [20 10 7 0 0]
+  set layers-neighbourhood [20 5 5 0 0]
+  set layers-swarm-algortihm ["Ring-of-Fliers" "Line-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0.004 0 0 0 0]
+  set layer-count 3
+  setup
+end
+
+to scenario-4
+  ;Ring-of-Balls
+  set layer-midpoints-count [8 10 0 0 0]
+  set layers-radius [20 8 0 0 0]
+  set layers-neighbourhood [20 5 0 0 0]
+  set layers-swarm-algortihm ["Ring-of-Fliers" "Ball-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0.004 0 0 0 0]
+  set layer-count 2
+  setup
+end
+
+to scenario-5
+  ;Ball-of-Lines
+  set layer-midpoints-count [8 10 0 0 0]
+  set layers-radius [20 5 0 0 0]
+  set layers-neighbourhood [20 5 0 0 0]
+  set layers-swarm-algortihm ["Line-of-Fliers" "Ball-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0 0 0 0 0]
+  set layer-count 2
+  setup
+end
+
 
 
 
@@ -656,7 +790,7 @@ max-velocity
 max-velocity
 0
 1
-0.2
+0.3
 0.1
 1
 NIL
@@ -671,7 +805,7 @@ neighbourhood-radius
 neighbourhood-radius
 0
 50
-14.0
+12.0
 1
 1
 NIL
@@ -686,7 +820,7 @@ radius
 radius
 0
 100
-11.0
+34.0
 1
 1
 NIL
@@ -718,7 +852,7 @@ controller-heading
 controller-heading
 0
 360
-317.0
+12.0
 1
 1
 NIL
@@ -876,7 +1010,7 @@ CHOOSER
 selected-layer
 selected-layer
 0 1 2 3 4
-1
+0
 
 BUTTON
 790
@@ -902,8 +1036,8 @@ CHOOSER
 317
 swarm-algorithm
 swarm-algorithm
-"Ring-of-Fliers" "Ball-of-Fliers"
-1
+"Ring-of-Fliers" "Ball-of-Fliers" "Line-of-Fliers"
+0
 
 BUTTON
 863
@@ -1027,6 +1161,127 @@ BUTTON
 810
 NIL
 add-agent\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+1424
+271
+1597
+304
+move-weight
+move-weight
+0
+0.05
+0.007
+0.001
+1
+NIL
+HORIZONTAL
+
+MONITOR
+1096
+180
+1238
+225
+NIL
+layers-move-weight
+17
+1
+11
+
+BUTTON
+664
+358
+855
+392
+Ring-of-Rings
+scenario-1
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+TEXTBOX
+861
+329
+1447
+348
+-----------------------------------------Scenarios-----------------------------------------
+12
+0.0
+1
+
+BUTTON
+874
+358
+998
+392
+Ring-of-Lines
+scenario-2\n
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+1010
+358
+1196
+392
+Ring-of-Lines-of-Rings
+scenario-3
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+1205
+359
+1306
+392
+Ring-of-Balls
+scenario-4
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+1319
+359
+1417
+392
+Line-of-Balls
+scenario-5
 NIL
 1
 T

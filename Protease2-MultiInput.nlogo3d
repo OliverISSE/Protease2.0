@@ -232,7 +232,21 @@ to go
       set mid-agent min-one-of midpoints [distance myself]
     ]
 
-    let vector calc-ring-of-fliers mid-agent
+    let vector [0 0 0]
+
+    (ifelse
+      swarm-algorithm = "Ring-of-Fliers" [
+        set vector calc-ring-of-fliers mid-agent
+      ]
+      swarm-algorithm = "Ball-of-Fliers" [
+        set vector calc-ball-of-fliers mid-agent
+      ]
+      swarm-algorithm = "Line-of-Fliers" [
+        set vector calc-line-of-fliers mid-agent
+      ]
+    )
+
+
     adapt-flight-vector vector
 
   ]
@@ -290,6 +304,79 @@ to-report calc-ring-of-fliers [mid-agent]
   report vector
 
 end
+
+
+to-report calc-ball-of-fliers [mid-agent]
+  let mid agent-to-vector mid-agent
+  ;center urge
+  let center-urge sub mid (agent-to-vector self)
+  set center-urge scale (((magnitude center-urge) - ( radius )) / (magnitude center-urge))  center-urge
+
+  ;seperation urge
+  let separation-urge [0 0 0]
+  let seperation-urge-weight 0
+  let closest min-one-of other swarm-agents in-radius neighborhood-radius [distance myself]
+  if (closest != nobody) [
+    set separation-urge sub (agent-to-vector self) (agent-to-vector closest)
+    set seperation-urge-weight ((1 / magnitude separation-urge) ^ 2)
+  ]
+  set separation-urge scale seperation-urge-weight separation-urge
+
+  ;add urges
+  let vector [0 0 0]
+  set vector add vector center-urge
+  set vector add vector separation-urge
+
+  report vector
+
+end
+
+to-report calc-line-of-fliers [mid-agent]
+  ;Projection onto line
+  let mid agent-to-vector mid-agent
+  let direction [orientation] of mid-agent
+  let agent agent-to-vector self
+  let projection line-projection agent mid direction
+  let line-urge sub projection agent
+  set line-urge scale 27 line-urge
+
+
+  ;center urge
+  let center-urge sub mid agent
+  let weight magnitude sub agent mid - radius
+  let center-urge-weight ifelse-value (weight > 0) [weight][0]
+  set center-urge scale center-urge-weight center-urge
+
+
+  ;seperation urge
+  let closest min-one-of other swarm-agents in-radius neighborhood-radius [distance myself]
+  let separation-urge [0 0 0]
+  let seperation-urge-weight 0
+  if (closest != nobody) [
+    set separation-urge sub (agent-to-vector self) (agent-to-vector closest)
+    set seperation-urge-weight ((1 / magnitude separation-urge) ^ 2)
+  ]
+  set separation-urge scale seperation-urge-weight separation-urge
+
+  ;add urges
+  let vector [0 0 0]
+  set vector add vector line-urge
+  set vector add vector separation-urge
+  set vector add vector center-urge
+
+  report vector
+end
+
+to-report line-projection [point origin direction]
+  let a scalar-prod sub point origin direction
+  let b scalar-prod direction direction
+  report add scale (a / b) direction origin
+end
+
+
+
+
+
 
 
 
@@ -413,7 +500,6 @@ end
 
 
 
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 0
@@ -500,7 +586,7 @@ controller-x
 controller-x
 min-pxcor
 max-pxcor
-24.0
+15.0
 1
 1
 NIL
@@ -604,7 +690,7 @@ neighborhood-radius
 neighborhood-radius
 0
 50
-16.0
+12.0
 1
 1
 NIL
@@ -651,7 +737,7 @@ controller-heading
 controller-heading
 0
 360
-100.0
+118.0
 1
 1
 NIL
@@ -666,7 +752,7 @@ controller-pitch
 controller-pitch
 0
 360
-90.0
+92.0
 1
 1
 NIL
@@ -806,6 +892,16 @@ NIL
 NIL
 NIL
 1
+
+CHOOSER
+560
+110
+726
+156
+swarm-algorithm
+swarm-algorithm
+"Ring-of-Fliers" "Ball-of-Fliers" "Line-of-Fliers"
+2
 
 @#$#@#$#@
 ## WHAT IS IT?
