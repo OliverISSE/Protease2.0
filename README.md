@@ -102,20 +102,25 @@ There are 5 predefined scenarios that can be selected with the corresponding but
 
 ![](figures/Ring-of-Rings.png)
 ![](figures/Ring-of-Rings-param.png)
+![](Videos/Ring-of-Rings.gif)
 
 #### Ring-of-Lines
 
 ![](figures/Ring-of-Lines.png)
 ![](figures/Ring-of-Lines-param.png)
+![](Videos/Ring-of-Lines.gif)
 
 #### Ring-of-Lines-of-Rings
 ![](figures/Ring-of-Lines-of-Rings.png)
 ![](figures/Ring-Lines-of-Rings-param.png)
+![](Videos/Ring-of-Lines-of-Rings.gif)
 
 #### Ring-of-Balls
 ![](figures/Ring-of-Balls.png)
 ![](figures/Ring-of-Balls-param.png)
+![](Videos/Ring-of-Balls.gif)
 
 #### Line-of-Balls
 ![](figures/Line-of-Balls.png)
 ![](figures/Line-of-Balls-param.png)
+![](Videos/Line-of-Balls.gif)
