@@ -49,7 +49,7 @@ Or by placing them freely:
  - **radius**: the radius of the Ring-of-Fliers
 
 
-## Protease 2.0-Layered
+## Protease 2.0-Hierarchic
 This Netlogo model is designed for the evaluation of swarm execution with layers.
 
 ![](figures/gui-hierarchic.png)
@@ -102,13 +102,20 @@ There are 5 predefined scenarios that can be selected with the corresponding but
 
 ![](figures/Ring-of-Rings.png)
 ![](figures/Ring-of-Rings-param.png)
-![](Videos/Ring-of-Rings.gif)
+
+
+https://github.com/user-attachments/assets/b279708e-ad48-4a69-9789-ba71a76f155d
+
 
 #### Ring-of-Lines
 
 ![](figures/Ring-of-Lines.png)
 ![](figures/Ring-of-Lines-param.png)
-![](Videos/Ring-of-Lines.gif)
+
+
+https://github.com/user-attachments/assets/73fcae03-4afd-4ac8-ad1b-025bb129e164
+
+
 
 #### Ring-of-Lines-of-Rings
 ![](figures/Ring-of-Lines-of-Rings.png)
@@ -118,9 +125,16 @@ There are 5 predefined scenarios that can be selected with the corresponding but
 #### Ring-of-Balls
 ![](figures/Ring-of-Balls.png)
 ![](figures/Ring-of-Balls-param.png)
-![](Videos/Ring-of-Balls.gif)
+
+
+https://github.com/user-attachments/assets/06bfe718-a1b4-43f4-bb06-ae825b9a7a2f
+
+
 
 #### Line-of-Balls
 ![](figures/Line-of-Balls.png)
 ![](figures/Line-of-Balls-param.png)
-![](Videos/Line-of-Balls.gif)
+
+
+https://github.com/user-attachments/assets/c05cc979-e203-4c46-9739-f23a68bd258d
+
