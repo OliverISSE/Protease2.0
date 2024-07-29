@@ -3,6 +3,9 @@
 This repository contains the Netlogo models used to evaluate the new concepts of Protease 2.0.
 A more detailed description of the concepts can be found in the paper
 
+Netlogo can be downloaded here: 
+(https://ccl.northwestern.edu/netlogo/)
+
 
 ## Protease 2.0-MultiInput
 This Netlogo model is designed for the evaluation of swarm execution with multiple reference points.
