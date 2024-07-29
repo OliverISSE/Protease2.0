@@ -48,6 +48,21 @@ Or by placing them freely:
  - **max-velocity**: the maximum length of the new flight vector 
  - **radius**: the radius of the Ring-of-Fliers
 
+### Examples
+
+
+https://github.com/user-attachments/assets/95badd60-8eaf-481b-b3f6-4664587f2571
+
+flower pattern (single set)
+
+
+
+
+https://github.com/user-attachments/assets/bcb21ad3-67ba-4e81-b606-3add28a346e6
+
+olympic ring pattern (multiple-set)
+
+
 
 ## Protease 2.0-Hierarchic
 This Netlogo model is designed for the evaluation of swarm execution with layers.
