@@ -120,7 +120,10 @@ https://github.com/user-attachments/assets/73fcae03-4afd-4ac8-ad1b-025bb129e164
 #### Ring-of-Lines-of-Rings
 ![](figures/Ring-of-Lines-of-Rings.png)
 ![](figures/Ring-Lines-of-Rings-param.png)
-![](Videos/Ring-of-Lines-of-Rings.gif)
+
+https://github.com/user-attachments/assets/b8b892d6-c5c2-4989-83e9-ede7c6489a02
+
+
 
 #### Ring-of-Balls
 ![](figures/Ring-of-Balls.png)
