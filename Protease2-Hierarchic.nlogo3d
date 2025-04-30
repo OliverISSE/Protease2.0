@@ -73,6 +73,13 @@ to setup-world
  ask patches with [pzcor = min-pzcor][
    set pcolor white
   ]
+ ask patches with [pxcor = min-pxcor][
+   set pcolor white
+  ]
+ ask patches with [pycor = min-pycor][
+   set pcolor white
+  ]
+
   ask patches with [pzcor = min-pzcor] [
     if (pycor = min-pycor) and (pxcor < -20) [set pcolor red]
     if (pxcor = min-pxcor) and (pycor < -20 ) [set pcolor green]
@@ -203,6 +210,8 @@ to initialize-agent
    set mp-index 0
    setxyz  random-xcor random-ycor random-zcor
    set color orange
+   ;set shape "circle"
+   ;set size 3
    set orientation (list dx dy dz)
 end
 
@@ -579,23 +588,34 @@ end
 
 to scenario-4
   ;Ring-of-Balls
-  set layer-midpoints-count [8 10 0 0 0]
-  set layers-radius [20 8 0 0 0]
+  set layer-midpoints-count [8 20 0 0 0]
+  set layers-radius [20 6 0 0 0]
   set layers-neighbourhood [20 5 0 0 0]
   set layers-swarm-algortihm ["Ring-of-Fliers" "Ball-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
-  set layers-move-weight [0.004 0 0 0 0]
+  set layers-move-weight [0 0 0 0 0]
   set layer-count 2
   setup
 end
 
 to scenario-5
-  ;Ball-of-Lines
-  set layer-midpoints-count [8 10 0 0 0]
-  set layers-radius [20 5 0 0 0]
+  ;Line-of-Balls
+  set layer-midpoints-count [8 20 0 0 0]
+  set layers-radius [30 8 0 0 0]
   set layers-neighbourhood [20 5 0 0 0]
   set layers-swarm-algortihm ["Line-of-Fliers" "Ball-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
   set layers-move-weight [0 0 0 0 0]
   set layer-count 2
+  setup
+end
+
+to scenario-6
+  ;Line-of-Rings-of-Rings
+  set layer-midpoints-count [8 10 10 0 0]
+  set layers-radius [20 10 5 0 0]
+  set layers-neighbourhood [20 5 5 0 0]
+  set layers-swarm-algortihm ["Line-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers" "Ring-of-Fliers"]
+  set layers-move-weight [0 0 0 0 0]
+  set layer-count 3
   setup
 end
 
@@ -805,7 +825,7 @@ neighbourhood-radius
 neighbourhood-radius
 0
 50
-12.0
+5.0
 1
 1
 NIL
@@ -820,7 +840,7 @@ radius
 radius
 0
 100
-34.0
+6.0
 1
 1
 NIL
@@ -852,7 +872,7 @@ controller-heading
 controller-heading
 0
 360
-12.0
+315.0
 1
 1
 NIL
@@ -939,7 +959,7 @@ layer-count
 layer-count
 1
 5
-2.0
+3.0
 1
 1
 NIL
@@ -954,7 +974,7 @@ agents-per-midpoint
 agents-per-midpoint
 0
 10
-8.0
+20.0
 1
 1
 NIL
@@ -1000,7 +1020,7 @@ CHOOSER
 set-mode
 set-mode
 "multiple-set" "single-set"
-0
+1
 
 CHOOSER
 640
@@ -1010,7 +1030,7 @@ CHOOSER
 selected-layer
 selected-layer
 0 1 2 3 4
-0
+1
 
 BUTTON
 790
@@ -1037,7 +1057,7 @@ CHOOSER
 swarm-algorithm
 swarm-algorithm
 "Ring-of-Fliers" "Ball-of-Fliers" "Line-of-Fliers"
-0
+1
 
 BUTTON
 863
@@ -1180,7 +1200,7 @@ move-weight
 move-weight
 0
 0.05
-0.007
+0.0
 0.001
 1
 NIL
@@ -1282,6 +1302,23 @@ BUTTON
 392
 Line-of-Balls
 scenario-5
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+1433
+359
+1541
+392
+NIL
+scenario-6
 NIL
 1
 T
