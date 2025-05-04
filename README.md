@@ -67,6 +67,20 @@ olympic ring pattern (multiple-set)
 
 
 
+https://github.com/user-attachments/assets/b455be05-9b52-498f-899e-49c95b221f78
+
+
+
+letter A pattern
+
+
+https://github.com/user-attachments/assets/36a7e25d-0a6e-4094-baf2-e12ea0320287
+
+
+letter V pattern
+
+
+
 ## Protease 2.0-Hierarchic
 This Netlogo model is designed for the evaluation of swarm execution with layers.
 

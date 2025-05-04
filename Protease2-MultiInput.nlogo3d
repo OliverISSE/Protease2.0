@@ -171,6 +171,73 @@ to midpoint-formation-flower
 
 end
 
+to midpoint-formation-A
+  if (midpoints-count < 3) [
+    user-message ("You need 3 mipoints for this Formation. Please change midpoints-count to 3 and press setup again before trying again.")
+  ]
+  ask midpoints with [index = 1] [
+    set xcor 0
+    set ycor 0
+    set zcor 0
+    set heading 90
+    set pitch 0
+    set orientation (list dx dy dz)
+
+  ]
+  ask midpoints with [index = 2] [
+    set xcor 5
+    set ycor 0
+    set zcor 0
+    set heading 200
+    set pitch 0
+    set orientation (list dx dy dz)
+  ]
+
+  ask midpoints with [index = 3] [
+    set xcor -5
+    set ycor 0
+    set zcor 0
+    set heading 160
+    set pitch 0
+    set orientation (list dx dy dz)
+  ]
+
+  set curr-midpoint 0
+  ask midpoints [
+    set shape "x"
+  ]
+
+end
+
+to midpoint-formation-V
+  if (midpoints-count < 2) [
+    user-message ("You need 2 mipoints for this Formation. Please change midpoints-count to 2 and press setup again before trying again.")
+  ]
+  ask midpoints with [index = 1] [
+    set xcor 2
+    set ycor 0
+    set zcor 0
+    set heading 200
+    set pitch 0
+    set orientation (list dx dy dz)
+  ]
+
+  ask midpoints with [index = 2] [
+    set xcor -2
+    set ycor 0
+    set zcor 0
+    set heading 160
+    set pitch 0
+    set orientation (list dx dy dz)
+  ]
+
+  set curr-midpoint 0
+  ask midpoints [
+    set shape "x"
+  ]
+
+end
+
 
 
 to midpoint-formation-olympic
@@ -276,7 +343,8 @@ to-report calc-ring-of-fliers [mid-agent]
   let mid agent-to-vector mid-agent
   ;center urge
   let center-urge sub mid (agent-to-vector self)
-  set center-urge scale (((magnitude center-urge) - radius) / (magnitude center-urge))  center-urge
+  ;set center-urge scale (((magnitude center-urge) - radius) / (magnitude center-urge))  center-urge
+  set center-urge scale (((magnitude center-urge) - radius))  center-urge
 
   ;seperation urge
   let closest min-one-of other swarm-agents in-radius neighborhood-radius [distance myself]
@@ -290,7 +358,7 @@ to-report calc-ring-of-fliers [mid-agent]
 
   ;flat urge
   let flat-urge [orientation] of mid-agent
-  let flat-urge-weight ((scalar-prod (sub (agent-to-vector self) mid) flat-urge) / (magnitude flat-urge)) * (-1)
+  let flat-urge-weight ((scalar-prod (sub mid (agent-to-vector self) ) flat-urge) / (magnitude flat-urge))
   set flat-urge scale (flat-urge-weight) flat-urge
 
 
@@ -497,9 +565,6 @@ end
 
 
 
-
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 0
@@ -556,7 +621,7 @@ agent-count
 agent-count
 0
 100
-50.0
+100.0
 1
 1
 NIL
@@ -571,7 +636,7 @@ midpoints-count
 midpoints-count
 0
 5
-5.0
+3.0
 1
 1
 NIL
@@ -586,7 +651,7 @@ controller-x
 controller-x
 min-pxcor
 max-pxcor
-15.0
+-9.0
 1
 1
 NIL
@@ -601,7 +666,7 @@ controller-y
 controller-y
 min-pycor
 max-pycor
-0.0
+-12.0
 1
 1
 NIL
@@ -647,7 +712,7 @@ CHOOSER
 selected-midpoint
 selected-midpoint
 1 2 3 4 5
-1
+0
 
 BUTTON
 315
@@ -690,7 +755,7 @@ neighborhood-radius
 neighborhood-radius
 0
 50
-12.0
+6.0
 1
 1
 NIL
@@ -705,7 +770,7 @@ radius
 radius
 0
 100
-5.0
+10.0
 1
 1
 NIL
@@ -737,7 +802,7 @@ controller-heading
 controller-heading
 0
 360
-118.0
+293.0
 1
 1
 NIL
@@ -752,17 +817,17 @@ controller-pitch
 controller-pitch
 0
 360
-92.0
+90.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-115
-366
-331
-400
+749
+238
+965
+272
 NIL
 midpoint-formation-flower
 NIL
@@ -783,7 +848,7 @@ CHOOSER
 set-mode
 set-mode
 "singe-set" "multiple-set"
-0
+1
 
 TEXTBOX
 115
@@ -843,10 +908,10 @@ NIL
 1
 
 BUTTON
-115
-407
-331
-440
+749
+279
+965
+312
 NIL
 midpoint-formation-olympic\n
 NIL
@@ -897,11 +962,45 @@ CHOOSER
 560
 110
 726
-156
+155
 swarm-algorithm
 swarm-algorithm
 "Ring-of-Fliers" "Ball-of-Fliers" "Line-of-Fliers"
 2
+
+BUTTON
+748
+322
+967
+356
+midpoint-A-Formation
+midpoint-formation-A
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+748
+368
+966
+402
+NIL
+midpoint-formation-V
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
