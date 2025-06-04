@@ -173,3 +173,6 @@ https://github.com/user-attachments/assets/06bfe718-a1b4-43f4-bb06-ae825b9a7a2f
 
 https://github.com/user-attachments/assets/c05cc979-e203-4c46-9739-f23a68bd258d
 
+#### Protease 2.0 with Real Drones
+https://youtu.be/82nOXppDLg4 
+
