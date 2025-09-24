@@ -1,4 +1,21 @@
 # An Approach for Extended Swarm Formation Flight with Drones: Protease 2.0 
+
+# Changelog  
+
+## [24.09.2025]  
+
+### Added  
+- Additional NetLogo files with the **`.nlogox3d`** filename extension.  
+- New **evaluation metrics** integrated into the `.nlogox3d` models.  
+
+### Changed  
+- Experiments can now be reproduced by parameterizing the swarm behavior (as explained below) and using the **Experiment** button instead of the **Go** button.  
+
+### Upcoming  
+- A more refined version of the repository with **full documentation** will be added soon.  
+
+
+
 # Netlogo Demos
 This repository contains the Netlogo models used to evaluate the new concepts of Protease 2.0.
 A more detailed description of the concepts can be found in the paper
