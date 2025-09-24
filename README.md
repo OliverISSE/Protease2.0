@@ -11,8 +11,12 @@
 ### Changed  
 - Experiments can now be reproduced by parameterizing the swarm behavior (as explained below) and using the **Experiment** button instead of the **Go** button.  
 
+### Notes  
+- The new `.nlogox3d` files are designed to be used with **NetLogo 7**.  
+
 ### Upcoming  
 - A more refined version of the repository with **full documentation** will be added soon.  
+ 
 
 
 
