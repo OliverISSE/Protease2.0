@@ -375,6 +375,41 @@ to experiment
 end
 
 
+to conditional-experiment 
+  let mid-agent nobody
+  ask swarm-agents [
+    
+    set mid-agent min-one-of midpoints [distance myself]
+
+    let vector [0 0 0]
+    
+    if [index] of mid-agent = 1 [
+      set vector calc-ring-of-fliers mid-agent
+    ]
+    
+    if [index] of mid-agent = 2 [
+      set vector calc-line-of-fliers mid-agent
+    ]
+    adapt-flight-vector vector
+
+  ]
+
+  plot-variance-distance-to-closest-neighbor
+  plot-cog-vel
+  
+  if-else (set-mode = "multiple-set") [
+      plot-average-distance-to-own-midpoint
+    ] [
+      plot-average-distance-to-closest-midpoint 
+    ]
+  tick
+  
+end
+
+
+
+
+
 to plot-average-distance-to-own-midpoint
   set-current-plot "Average Distance to Mid"
   set-current-plot-pen "distance"
@@ -828,10 +863,10 @@ end
     <view3d wrappingAllowedZ="true" x="0" wrappingAllowedX="true" y="0" minPycor="-30" height="802" showTickCounter="true" patchSize="12.0" fontSize="10" wrappingAllowedY="true" width="801" tickCounterLabel="ticks" maxPycor="30" updateMode="0" frameRate="30.0" maxPzcor="30" maxPxcor="30" minPxcor="-30" minPzcor="-30"></view3d>
     <button x="460" y="108" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="63">setup
 </button>
-    <slider x="269" step="1" y="166" max="100" width="172" display="agent-count" height="50" min="0" direction="Horizontal" default="50.0" variable="agent-count"></slider>
-    <slider x="269" step="1" y="107" max="5" width="172" display="midpoints-count" height="50" min="0" direction="Horizontal" default="5.0" variable="midpoints-count"></slider>
-    <slider x="403" step="1" y="272" max="max-pxcor" width="172" display="controller-x" height="50" min="min-pxcor" direction="Horizontal" default="5.0" variable="controller-x"></slider>
-    <slider x="406" step="1" y="333" max="max-pycor" width="172" display="controller-y" height="50" min="min-pycor" direction="Horizontal" default="-5.0" variable="controller-y"></slider>
+    <slider x="269" step="1" y="166" max="100" width="172" display="agent-count" height="50" min="0" direction="Horizontal" default="20.0" variable="agent-count"></slider>
+    <slider x="269" step="1" y="107" max="5" width="172" display="midpoints-count" height="50" min="0" direction="Horizontal" default="2.0" variable="midpoints-count"></slider>
+    <slider x="403" step="1" y="272" max="max-pxcor" width="172" display="controller-x" height="50" min="min-pxcor" direction="Horizontal" default="-28.0" variable="controller-x"></slider>
+    <slider x="406" step="1" y="333" max="max-pycor" width="172" display="controller-y" height="50" min="min-pycor" direction="Horizontal" default="-29.0" variable="controller-y"></slider>
     <slider x="407" step="1" y="391" max="max-pzcor" width="172" display="controller-z" height="50" min="min-pzcor" direction="Horizontal" default="0.0" variable="controller-z"></slider>
     <button x="118" actionKey="G" y="631" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="63">go</button>
     <chooser x="255" y="271" height="60" variable="selected-midpoint" current="0" width="138" display="selected-midpoint">
@@ -844,12 +879,12 @@ end
     <button x="315" y="340" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="78" display="Select">select-midpoint</button>
     <slider x="126" step="0.1" y="809" max="1" width="173" display="max-velocity" height="50" min="0" direction="Horizontal" default="0.2" variable="max-velocity"></slider>
     <slider x="125" step="1" y="749" max="50" width="209" display="neighborhood-radius" height="50" min="0" direction="Horizontal" default="10.0" variable="neighborhood-radius"></slider>
-    <slider x="125" step="1" y="871" max="100" width="173" display="radius" height="50" min="0" direction="Horizontal" default="5.0" variable="radius"></slider>
+    <slider x="125" step="1" y="871" max="100" width="173" display="radius" height="50" min="0" direction="Horizontal" default="9.0" variable="radius"></slider>
     <button x="118" y="271" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="126">go-midpoints</button>
-    <slider x="408" step="1" y="454" max="360" width="190" display="controller-heading" height="50" min="0" direction="Horizontal" default="147.0" variable="controller-heading"></slider>
+    <slider x="408" step="1" y="454" max="360" width="190" display="controller-heading" height="50" min="0" direction="Horizontal" default="201.0" variable="controller-heading"></slider>
     <slider x="408" step="1" y="514" max="360" width="173" display="controller-pitch" height="50" min="0" direction="Horizontal" default="90.0" variable="controller-pitch"></slider>
     <button x="118" y="339" height="40" disableUntilTicks="false" forever="false" kind="Observer" width="182">midpoint-formation-flower</button>
-    <chooser x="115" y="107" height="60" variable="set-mode" current="1" width="148" display="set-mode">
+    <chooser x="115" y="107" height="60" variable="set-mode" current="0" width="148" display="set-mode">
       <choice type="string" value="singe-set"></choice>
       <choice type="string" value="multiple-set"></choice>
     </chooser>
@@ -917,6 +952,12 @@ end
       </pen>
     </plot>
     <button x="893" actionKey="E" y="642" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="89">experiment</button>
+    <note x="1157" y="689" backgroundDark="0" fontSize="12" width="344" markdown="false" height="110" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">For the conditional experiment:
+- Set two midpoints, then press “conditional-experiment” instead of “Go.”
+- To move the midpoints, press “Go–Midpoints.”
+- You are encouraged to try
+ different parameters and agent counts.</note>
+    <button x="1201" y="803" height="40" disableUntilTicks="false" forever="true" kind="Observer" width="170">conditional-experiment</button>
   </widgets>
   <info>## WHAT IS IT?
 
